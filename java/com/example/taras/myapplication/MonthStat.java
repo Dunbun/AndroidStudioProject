@@ -17,6 +17,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class MonthStat extends AppCompatActivity {
@@ -55,20 +57,11 @@ public class MonthStat extends AppCompatActivity {
             jsonArray.remove(0);//remove trash
 
             getNeededMonth();
-
             getCategories();
-
-
-
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-
         drawStat();
-
-
-
     }
     protected void getNeededMonth()
     {
@@ -76,7 +69,6 @@ public class MonthStat extends AppCompatActivity {
         JSONObject obj = null;
         int monthFromData = 0;
         int counter = 0;
-
 
         for (int i = 0; i < jsonArray.length(); i++) {
             try {
@@ -96,9 +88,6 @@ public class MonthStat extends AppCompatActivity {
             }
 
         }
-
-
-
 
         Toast.makeText(MonthStat.this,Integer.toString(counter),Toast.LENGTH_SHORT).show();
     }
@@ -196,6 +185,10 @@ public class MonthStat extends AppCompatActivity {
 
         paint.setStrokeWidth(3);
         paint.setTextSize(25);
+
+        DecimalFormat decimalFormat = new DecimalFormat("#.##");
+        decimalFormat.setRoundingMode(RoundingMode.CEILING);
+        double angleForText = 0;
         for(int i = 0; i < categorySpentMoney.size(); i++) {
             angle2 = categorySpentMoney.get(i) / cof * (-1);
             x = getX(angle,R);
@@ -207,18 +200,28 @@ public class MonthStat extends AppCompatActivity {
             canvas.drawArc(width/2-R,height/2-R,width/2+R,height/2+R, (float) angle, (float) angle2,true,paint);
 
 
-            x = getX(angle+angle2/2,R+100);
-            y = getY(angle+angle2/2,R+100);
+            x = getX(angle+angle2/2,R+50);
+            y = getY(angle+angle2/2,R+50);
 
 
 
             canvas.drawLine(oX,oY,x,y,paint);
-            x = getX(angle+angle2/2,R+110);
-            y = getY(angle+angle2/2,R+110);
-
+            angleForText = (angle+angle2/2);
+            if(angleForText > 90) {
+                angleForText -= 180;
+                x = getX(angle + angle2 / 2, R + 50 + 65);
+                y = getY(angle + angle2 / 2, R + 50 + 65);
+            }
+            else {
+                x = getX(angle + angle2 / 2, R + 50);
+                y = getY(angle + angle2 / 2, R + 50);
+            }
 
             paint.setColor(Color.BLACK);
-            canvas.drawText(angle2/3.6 + "%",x,y,paint);
+
+            canvas.rotate((float) angleForText, x, y);
+            canvas.drawText(decimalFormat.format(angle2/3.6) + "%",x,y,paint);
+            canvas.rotate((-(float)angleForText), x, y);
             angle += angle2;
         }
 

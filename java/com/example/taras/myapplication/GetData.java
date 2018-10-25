@@ -60,6 +60,7 @@ public class GetData extends AppCompatActivity implements GestureDetector.OnGest
     StringBuilder text = new StringBuilder();
     private List<String> fileList = new ArrayList<String>();
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -182,6 +183,7 @@ public class GetData extends AppCompatActivity implements GestureDetector.OnGest
 
         ArrayAdapter<String> directoryList = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, fileList);
         dialog_ListView.setAdapter(directoryList);
+
     }
 
 
